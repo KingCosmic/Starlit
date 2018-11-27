@@ -1,13 +1,13 @@
 
 const config = {
   mongo: {
-    dbName: 'databasename',
-    url: 'mongodb://examplelink@places.com:port/databasename'
+    dbName: 'eh',
+    url: 'mongodb://whatever:whatever@39183091.whatever.com:3213/eh'
   },
 
   // Bot Owner, level 10 by default. A User ID. Should never be anything else than the bot owner's ID.
 
-  "ownerID": "123456",
+  "ownerID": "152186808732483584",
 
   // Bot Admins, level 9 by default. Array of user ID strings.
 
@@ -19,7 +19,7 @@ const config = {
 
   // Your Bot's Token. Available on https://discordapp.com/developers/applications/me
 
-  "token": "Bot Token goes here",
+  "token": "TOKEN",
 
   // Default per-server settings. New guilds have these settings. 
 

@@ -10,13 +10,15 @@ exports.run = (client, message) => {
     client.userInfo.setProp(key, 'economy', {
       points: 0,
       level: 1,
-      coins: 0
+      coins: 0,
+
+      inventory: []
     });
   }
 
   // Get only the current points for the user.
-  let currentPoints = userInfo.points;
-  let currentYen = userInfo.coins;
+  let currentPoints = userInfo.economy.points;
+  let currentYen = userInfo.economy.coins;
 
   // Increment the points and save them.
   client.userInfo.setProp(key, "economy.points", ++currentPoints);

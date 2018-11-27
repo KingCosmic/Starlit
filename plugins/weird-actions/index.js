@@ -1,11 +1,9 @@
 
-
 exports.commands = [
-  require('./commands/help'),
-  require('./commands/mylevel'),
-  require('./commands/stats'),
-  require('./commands/eval'),
-  require('./commands/set')
+  require('./commands/bite'),
+  require('./commands/hug'),
+  require('./commands/kiss'),
+  require('./commands/pat')
 ]
 
 // even though this is empty

@@ -71,7 +71,9 @@ module.exports = (client, message) => {
   // Triggers on new users we haven't seen before.
   if(!client.userInfo.has(key)) {
     // The user is setup with a blank object. plugins setup what variables they need
-    client.userInfo.set(key, {});
+    client.userInfo.set(key, {
+      user: message.author.id
+    });
   }
 
   // here we check for the plugins that have registered and event to happen on this function
