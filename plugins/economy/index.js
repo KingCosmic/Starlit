@@ -4,7 +4,8 @@ exports.commands = [
   require('./commands/daily'),
   require('./commands/balance'),
   require('./commands/leaderboard'),
-  require('./commands/points')
+  require('./commands/points'),
+  require('./commands/give')
 ]
 
 exports.events = {

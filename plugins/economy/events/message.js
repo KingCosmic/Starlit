@@ -14,6 +14,8 @@ exports.run = (client, message) => {
 
       inventory: []
     });
+
+    return;
   }
 
   // Get only the current points for the user.
@@ -29,12 +31,12 @@ exports.run = (client, message) => {
   const curLevel = Math.floor(0.1 * Math.sqrt(currentPoints));
 
   // Act upon level up by sending a message and updating the user's level in enmap.
-  if (userInfo.level < curLevel) {
+  if (userInfo.economy.level < curLevel) {
     currentYen += (3 * curLevel);
     
-    message.reply(`You've leveled up to level **${curLevel}**! You got ${currentYen} Yen! Ain't that dandy?`);
     client.userInfo.setProp(key, 'economy.coins', currentYen);
     client.userInfo.setProp(key, "economy.level", curLevel);
+    message.reply(`You've leveled up to level **${curLevel}**! You got ${currentYen} Yen! Ain't that dandy?`);
   }
 }
 

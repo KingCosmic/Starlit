@@ -1,5 +1,5 @@
 
-exports.run = async (client, message, args, level) => {
+exports.run = (client, message, args, level) => {
   const currency = client.userInfo.getProp(message.author.id, 'economy.coins');
   message.reply(`your current amount of :yen: is ${currency}`);
 };
