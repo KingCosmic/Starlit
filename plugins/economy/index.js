@@ -5,7 +5,8 @@ exports.commands = [
   require('./commands/balance'),
   require('./commands/leaderboard'),
   require('./commands/points'),
-  require('./commands/give')
+  require('./commands/give'),
+  require('./commands/purchase')
 ]
 
 exports.events = {

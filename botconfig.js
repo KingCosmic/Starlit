@@ -1,17 +1,17 @@
 
 const config = {
   mongo: {
-    dbName: 'DBNAME',
-    url: 'mongodb://USERNAME:PASSWROD@HOSE.EXAMPLE.com:PORT/DBNAME'
+    dbName: 'dbname',
+    url: 'mongodb://USERNAME:PASSWORD@whatver.example.com:port/dbname'
   },
 
   // Bot Owner, level 10 by default. A User ID. Should never be anything else than the bot owner's ID.
 
-  "ownerID": "AWOOGA",
+  "ownerID": "152186808732483584",
 
   // Bot Admins, level 9 by default. Array of user ID strings.
 
-  "admins": ['AWOOGA'],
+  "admins": [],
 
   // Bot Support, level 8 by default. Array of user ID strings
 

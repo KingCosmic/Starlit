@@ -14,7 +14,7 @@ exports.commands = [
 ]
 
 exports.events = {
-
+  'guildMemberAdd': require('./events/guildMemberAdd')
 }
 
 // Currently a unused variable will add things to it
