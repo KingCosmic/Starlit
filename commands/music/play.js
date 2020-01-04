@@ -32,7 +32,8 @@ module.exports = class MeowCommand extends Command {
       if (err) return console.log(err.toString());
 
       for (let v = 0; v < results.videos.length; v++) {
-        if (results.videos[0].url.startsWith('/')) return queue.play(message, results.videos[v]);
+
+        if (results.videos[v].url.startsWith('/')) return queue.play(message, results.videos[v]);
       }
     })
   }

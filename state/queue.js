@@ -52,7 +52,7 @@ class Queue {
     if (song === undefined) return;
     song.requester = message.author.username
     this.songs.push(song);
-
+    message.channel.send(`Added **${song.title}** to the queue, requested by: **${song.requester}**`);
     // check if this is the first only song in queue and that we're in a vc
     // also check if we're playing already because if there is a song playing
     // if so just start the song
