@@ -7,8 +7,8 @@
  */
 
 module.exports = {
-  token: 'NDM3NjY1MTM0OTYyNTQwNTc0.XgxHOg.0B1nbK_VMVbv2oIiW98XzO7AJ1Y',
-  owner: ['204129636794368000', '152186808732483584'],
+  token: '',
+  owner: '',
   prefix: '`',
-  youtubeapitoken: 'AIzaSyChxJ1D5WI78Ew3leXBlMq3QqiT5N39goI'
+  youtubeapitoken: ''
 }
