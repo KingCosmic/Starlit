@@ -4,23 +4,29 @@ class Queue {
   constructor() {
     // state variables
     this.songs = [];
+    this.currentSong = undefined;
+    this.playing = false;
+    this.dispatcher = undefined; // gets set by commands
 
     // option flags
-    this.playing = false;
     this.repeat = false;
-    this.dispatcher = undefined; // gets set by commands
 
     this.nextSong = this.nextSong.bind(this);
   }
 
-  // remove a song by index in queue
-  removeSong(index) {
-
+  toggleRepeat() {
+    this.repeat = !this.repeat;
   }
 
   // runs when song is over (also runs when a song is skipped)
   nextSong() {
-    const song = this.songs.shift();
+    let song;
+
+    if (this.repeat) {
+      song = this.currentSong;
+    } else {
+      song = this.currentSong = this.songs.shift();
+    }
 
     if (song === undefined) return this.endOfQueue();
 
