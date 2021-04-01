@@ -5,9 +5,10 @@ import { api } from '../../twitch'
 import DB from '../../db'
 
 import config from '../../config'
+import { Message } from 'discord.js'
 
 class AddCommand extends Command {
-  constructor(client) {
+  constructor(client:CommandoClient) {
     super(client, {
       name: 'add',
       group: 'twitch',
@@ -25,7 +26,7 @@ class AddCommand extends Command {
     });
   }
 
-  async run(message:CommandoMessage, { username }:{ username:string }) {
+  async run(message:CommandoMessage, { username }):Promise<Message | Message[]> {
     // get our user we plan to get events for
     const user = await api.helix.users.getUserByName(username);
 
@@ -53,7 +54,8 @@ class AddCommand extends Command {
       }
     });
     } catch(e) {
-      return console.log(e)
+      console.log(e)
+      return message.say(e)
     }
 
     // insert this data into the database
@@ -63,7 +65,7 @@ class AddCommand extends Command {
     });
 
     // give some user feedback
-    message.say(`this channel will be notified once ${username} goes live.`);
+    return message.say(`this channel will be notified once ${username} goes live.`);
   }
 }
 

@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 import queue from '../../state/queue'
@@ -12,10 +13,10 @@ class RepeatCommand extends Command {
     });
   }
 
-  run(message:CommandoMessage) {
+  run(message:CommandoMessage):Promise<Message | Message[]> {
     queue.toggleRepeat();
 
-    message.reply(`repeat is ${(queue.repeat) ? 'on' : 'off'}`);
+    return message.say(`repeat is ${(queue.repeat) ? 'on' : 'off'}`);
   }
 }
 

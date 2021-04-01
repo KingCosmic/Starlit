@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 class DisconnectCommand extends Command {
@@ -11,10 +12,12 @@ class DisconnectCommand extends Command {
     });
   }
 
-  run(message:CommandoMessage) {
+  run(message:CommandoMessage):Promise<Message | Message[]> {
     if (message.guild.voice.connection) {
       message.guild.voice.connection.disconnect()
     }
+
+    return message.say('I disconnected')
   }
 }
 

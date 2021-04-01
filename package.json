@@ -10,7 +10,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "tsc && node dist/index.js",
     "build": "tsc"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "twitch": "^4.5.3",
     "twitch-auth": "^4.5.3",
     "twitch-eventsub": "^4.5.3",
+    "typescript": "^4.2.3",
     "youtube-search": "^1.1.5",
     "yt-search": "^2.7.6",
     "ytdl-core": "^4.4.5"

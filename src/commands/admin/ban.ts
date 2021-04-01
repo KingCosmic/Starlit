@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 // TODO:(Cosmic)[args]
@@ -14,13 +15,13 @@ class BanCommand extends Command {
     });
   }
 
-  run(message:CommandoMessage) {
+  run(message:CommandoMessage):Promise<Message | Message[]> {
     const userToBan = message.mentions.members.first()
 
-    if (!userToBan) return message.reply('please tag someone to ban');
+    if (!userToBan) return message.say('please tag someone to ban');
 
     userToBan.ban()
-    return message.channel.send(`${userToBan}, successfully banned`)
+    return message.say(`${userToBan}, successfully banned`)
   }
 }
 

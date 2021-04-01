@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 import queue from '../../state/queue'
@@ -12,8 +13,10 @@ class JoinCommand extends Command {
     });
   }
 
-  run(message:CommandoMessage) {
+  run(message:CommandoMessage):Promise<Message | Message[]> {
     queue.join(message);
+
+    return message.say('I joined your channel')
   }
 }
 

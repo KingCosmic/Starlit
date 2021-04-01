@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 import ytSearch from 'yt-search'
 
@@ -13,10 +14,10 @@ class PlayCommand extends Command {
     });
   }
 
-  run(message:CommandoMessage) {
+  run(message:CommandoMessage):Promise<Message | Message[]> {
     const searchcontent = message.content.slice(5);
 
-    if (searchcontent.length === 0) return message.reply('specify a queury or link to play');
+    if (searchcontent.length === 0) return message.say('specify a queury or link to play');
 
     // the space in front of this IS REQUIRED
     if (searchcontent.startsWith(' https://www.youtube.com')) {

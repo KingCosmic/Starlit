@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 import queue from '../../state/queue'
@@ -12,12 +13,12 @@ class ResumeCommand extends Command {
     });
   }
 
-  run(message:CommandoMessage) {
-    if (queue.dispatcher === undefined) return message.reply('no music playing');
-    if (queue.playing) return message.reply('already playing');
+  run(message:CommandoMessage):Promise<Message | Message[]> {
+    if (queue.dispatcher === undefined) return message.say('no music playing');
+    if (queue.playing) return message.say('already playing');
 
     queue.resumePlaying();
-    message.channel.send('music resumed');
+    message.say('music resumed');
   }
 }
 

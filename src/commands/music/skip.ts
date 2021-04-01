@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
 import queue from '../../state/queue'
@@ -12,12 +13,13 @@ class SkipCommand extends Command {
     });
   }
 
-  run(message:CommandoMessage) {
+  run(message:CommandoMessage):Promise<Message | Message[]> {
     const dispatcher = queue.dispatcher;
 
-    if (dispatcher === undefined) return message.reply('not playing any music');
+    if (dispatcher === undefined) return message.say('not playing any music');
 
     dispatcher.end();
+    return message.say('skipped')
   }
 }
 
