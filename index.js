@@ -3,6 +3,8 @@ require('dotenv').config()
 const { CommandoClient } = require('discord.js-commando')
 const path = require('path')
 
+const db = require('./db')
+
 const config = require('./config')
 
 const setupListeners = require('./listeners')
@@ -10,6 +12,9 @@ const setupListeners = require('./listeners')
 const setupExpress = require('./express')
 
 const init = async () => {
+  
+  await db.connect()
+  console.log('connected to database')
 
   const client = new CommandoClient({
     commandPrefix: config.prefix,

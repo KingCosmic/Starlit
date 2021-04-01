@@ -6,29 +6,28 @@
   "author": "Austyn Studdard <KingCosmicDev@gmail.com>",
   "license": "MIT",
   "private": false,
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.4.0",
+    "@discordjs/opus": "^0.5.0",
     "discord.js": "^12.5.1",
-    "discord.js-commando": "^0.12.1",
+    "discord.js-commando": "^0.12.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "ffmpeg-static": "^4.2.7",
+    "ffmpeg-static": "^4.2.8",
     "mongodb": "^3.6.5",
     "node-opus": "^0.3.3",
     "twitch": "^4.5.3",
     "twitch-auth": "^4.5.3",
     "twitch-eventsub": "^4.5.3",
-    "typescript": "^4.2.3",
-    "youtube-search": "^1.1.4",
-    "yt-search": "^0.4.1",
-    "ytdl-core": "^4.4.5"
-  },
-  "devDependencies": {
-    "@types/mongodb": "^3.6.11",
-    "@types/node": "^14.14.37",
-    "ts-node": "^9.1.1"
+    "youtube-search": "^1.1.5",
+    "yt-search": "^2.7.4",
+    "ytdl-core": "^4.4.5",
+    "axios": "^0.21.1",
+    "@trycourier/courier": "^2.0.0"
   }
 }

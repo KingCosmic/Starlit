@@ -1,6 +1,11 @@
 const express = require('express');
 const port = process.env.PORT || 3000;
 
+const { api } = require('./twitch')
+
+const { CourierClient } = require("@trycourier/courier");
+const courier = CourierClient();
+
 const crypto = require("crypto");
 const db = require('./db');
 const twitchSigningSecret = process.env.TWITCH_SECRET;
@@ -80,7 +85,7 @@ module.exports = async (client) => {
   });
 
   const sendOnline = async event => {
-    const stream = await twitch.helix.streams.getStreamByUserId(
+    const stream = await api.helix.streams.getStreamByUserId(
       event.broadcaster_user_id
     );
     const game = await stream.getGame();
@@ -111,7 +116,7 @@ module.exports = async (client) => {
         discord: {
           body: {
             embed: {
-              title: `${stream.userDisplayName} is playing Apex Legends on Twitch!`,
+              title: `${stream.userDisplayName} is playing ${game.name} on Twitch!`,
               description: stream.title,
               url: `https://twitch.tv/${stream.userName}`,
               color: 4124316,
