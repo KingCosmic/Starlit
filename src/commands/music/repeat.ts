@@ -1,9 +1,9 @@
-const { Command } = require('discord.js-commando');
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
-const queue = require('../../state/queue');
+import queue from '../../state/queue'
 
-module.exports = class MeowCommand extends Command {
-  constructor(client) {
+class RepeatCommand extends Command {
+  constructor(client:CommandoClient) {
     super(client, {
       name: 'repeat',
       group: 'music',
@@ -12,9 +12,11 @@ module.exports = class MeowCommand extends Command {
     });
   }
 
-  run(message) {
+  run(message:CommandoMessage) {
     queue.toggleRepeat();
 
     message.reply(`repeat is ${(queue.repeat) ? 'on' : 'off'}`);
   }
 }
+
+export default RepeatCommand

@@ -1,13 +1,12 @@
-const { Command } = require('discord.js-commando');
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import axios from 'axios'
 
-const { api } = require('../../twitch');
-const DB = require('../../db');
+import { api } from '../../twitch'
+import DB from '../../db'
 
-const config = require('../../config');
+import config from '../../config'
 
-const axios = require('axios');
-
-module.exports = class AddCommand extends Command {
+class AddCommand extends Command {
   constructor(client) {
     super(client, {
       name: 'add',
@@ -26,7 +25,7 @@ module.exports = class AddCommand extends Command {
     });
   }
 
-  async run(message, { username }) {
+  async run(message:CommandoMessage, { username }:{ username:string }) {
     // get our user we plan to get events for
     const user = await api.helix.users.getUserByName(username);
 
@@ -67,3 +66,5 @@ module.exports = class AddCommand extends Command {
     message.say(`this channel will be notified once ${username} goes live.`);
   }
 }
+
+export default AddCommand

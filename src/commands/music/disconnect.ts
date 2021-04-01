@@ -1,9 +1,7 @@
-const { Command } = require('discord.js-commando');
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
-const queue = require('../../state/queue');
-
-module.exports = class Disconnect extends Command {
-  constructor(client) {
+class DisconnectCommand extends Command {
+  constructor(client:CommandoClient) {
     super(client, {
       name: 'disconnect',
       aliases: ['leave'],
@@ -13,9 +11,11 @@ module.exports = class Disconnect extends Command {
     });
   }
 
-  run(message) {
+  run(message:CommandoMessage) {
     if (message.guild.voice.connection) {
       message.guild.voice.connection.disconnect()
     }
   }
 }
+
+export default DisconnectCommand

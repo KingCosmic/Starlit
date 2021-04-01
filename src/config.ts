@@ -6,7 +6,7 @@
  *  youtubeapitoken - token for youtube api so we can listen to music
  */
 
-module.exports = {
+export default {
   token: process.env.TOKEN,
   baseUrl: 'https://starlit.glitch.me',
   owner: '152186808732483584',

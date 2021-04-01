@@ -1,7 +1,10 @@
-const { Command } = require('discord.js-commando');
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
-module.exports = class MeowCommand extends Command {
-  constructor(client) {
+// TODO:(Cosmic)[args]
+// change the userToBan into a command arg
+// so it auto prompts and is more readable as a whole
+class BanCommand extends Command {
+  constructor(client:CommandoClient) {
     super(client, {
       name: 'ban',
       aliases: ['b'],
@@ -11,7 +14,7 @@ module.exports = class MeowCommand extends Command {
     });
   }
 
-  run(message) {
+  run(message:CommandoMessage) {
     const userToBan = message.mentions.members.first()
 
     if (!userToBan) return message.reply('please tag someone to ban');
@@ -20,3 +23,5 @@ module.exports = class MeowCommand extends Command {
     return message.channel.send(`${userToBan}, successfully banned`)
   }
 }
+
+export default BanCommand

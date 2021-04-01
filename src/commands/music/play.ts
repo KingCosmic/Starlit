@@ -1,12 +1,10 @@
-const { Command } = require('discord.js-commando');
-const ytSearch = require('yt-search')
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import ytSearch from 'yt-search'
 
-const { youtubeapitoken } = require('../../config');
+import queue from '../../state/queue'
 
-const queue = require('../../state/queue');
-
-module.exports = class MeowCommand extends Command {
-  constructor(client) {
+class PlayCommand extends Command {
+  constructor(client:CommandoClient) {
     super(client, {
       name: 'play',
       group: 'music',
@@ -15,7 +13,7 @@ module.exports = class MeowCommand extends Command {
     });
   }
 
-  run(message) {
+  run(message:CommandoMessage) {
     const searchcontent = message.content.slice(5);
 
     if (searchcontent.length === 0) return message.reply('specify a queury or link to play');
@@ -38,3 +36,5 @@ module.exports = class MeowCommand extends Command {
     })
   }
 }
+
+export default PlayCommand

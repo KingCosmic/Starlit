@@ -1,9 +1,9 @@
-const { Command } = require('discord.js-commando');
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
-const queue = require('../../state/queue');
+import queue from '../../state/queue'
 
-module.exports = class MeowCommand extends Command {
-  constructor(client) {
+class SkipCommand extends Command {
+  constructor(client:CommandoClient) {
     super(client, {
       name: 'skip',
       group: 'music',
@@ -12,7 +12,7 @@ module.exports = class MeowCommand extends Command {
     });
   }
 
-  run(message) {
+  run(message:CommandoMessage) {
     const dispatcher = queue.dispatcher;
 
     if (dispatcher === undefined) return message.reply('not playing any music');
@@ -20,3 +20,5 @@ module.exports = class MeowCommand extends Command {
     dispatcher.end();
   }
 }
+
+export default SkipCommand

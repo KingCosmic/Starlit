@@ -1,18 +1,23 @@
 const yt = require('ytdl-core');
 
+// TODO:(Cosmic) [rework, clarity]
+// rework this whole class so we can easily add to it
+
 class Queue {
+  public songs:{ title:string, requester:any, url:string }[] = []
+  public currentSong?:{ title:string, requester:any, url:string }
+  public playing:boolean = false;
+
+  // our voice connection.
+  public dispatcher?:any;
+  public connection?:any;
+
+  public channel?:any;
+
+  // option flags
+  public repeat:boolean = false;
+
   constructor() {
-    // state variables
-    this.songs = [];
-    this.currentSong = undefined;
-    this.playing = false;
-    // our voice connection
-    this.dispatcher = undefined;
-    this.connection = undefined; // gets set by commands
-
-    // option flags
-    this.repeat = false;
-
     this.nextSong = this.nextSong.bind(this);
   }
 
@@ -66,10 +71,10 @@ class Queue {
     // check if this is the first only song in queue and that we're in a vc
     // also check if we're playing already because if there is a song playing
     // if so just start the song
-    if (this.songs.length === 1 && this.playing === false && this.connection) return this.nextSong(message);
+    if (this.songs.length === 1 && this.playing === false && this.connection) return this.nextSong();
     
     // if we are not in vc join it then play
-    if (!this.connection) return this.join(message).then(() => this.nextSong(message));
+    if (!this.connection) return this.join(message).then(this.nextSong);
 
     // this will make sure the playing flag is set
     // it does it's own check so we just call it regardless tbh.
@@ -95,4 +100,4 @@ class Queue {
   }
 }
 
-module.exports = new Queue();
+export default new Queue();

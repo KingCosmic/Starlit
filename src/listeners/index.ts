@@ -1,10 +1,11 @@
-const callbacks = require('../state/listeners');
+import { CommandoClient } from 'discord.js-commando'
+import callbacks from '../state/listeners'
 
 const groups = []
 
 // This method takes our client and
 // setups the events and listeners for our plugins.`
-module.exports = (client) => {
+module.exports = (client:CommandoClient) => {
 
   // loop through our groups
   // a group can have multiple listeners
@@ -40,7 +41,7 @@ module.exports = (client) => {
           // loop through them
           for (let c = 0; c < cbs.length; c++) {
             // call them with our client and the args we get.
-            cb(client, ...args);
+            cbs[c](client, ...args);
           }
         });
       }

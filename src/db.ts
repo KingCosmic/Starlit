@@ -1,6 +1,11 @@
-const { MongoClient } = require('mongodb')
+import { Collection, MongoClient } from 'mongodb'
 
 class Database {
+  public client:MongoClient;
+  public dbName:string = process.env.dbName;
+
+  public LED:Collection<any>;
+
   constructor() {
     this.dbName = process.env.DBNAME
 
@@ -14,7 +19,7 @@ class Database {
    * 
    * connects to our mongodb database
    */
-  connect() {
+  public connect() {
     return new Promise(resolve => {
       this.client.connect().then(() => {
         this.LED = this.client.db(this.dbName).collection('live_event_data')
@@ -25,4 +30,4 @@ class Database {
   }
 }
 
-module.exports = new Database();
+export default new Database();
