@@ -6,7 +6,9 @@ class Queue {
     this.songs = [];
     this.currentSong = undefined;
     this.playing = false;
-    this.dispatcher = undefined; // gets set by commands
+    // our voice connection
+    this.dispatcher = undefined;
+    this.connection = undefined; // gets set by commands
 
     // option flags
     this.repeat = false;
@@ -31,7 +33,7 @@ class Queue {
     if (song === undefined) return this.endOfQueue();
 
     this.channel.send(`Playing: **${song.title}** as requested by: **${song.requester}**`);
-    this.dispatcher = this.channel.guild.voiceConnection.playStream(yt(`https://www.youtube.com${song.url}`, { audioonly: true }), { passes: 1 });
+    this.dispatcher = this.channel.guild.voice.connection.play(yt(song.url.trim(), { filter: 'audioonly' }));
     this.playing = true;
 
     this.dispatcher.on('end', () => {
@@ -45,10 +47,12 @@ class Queue {
   }
 
   join(message) {
-    const voiceChannel = message.member.voiceChannel;
-    if (!voiceChannel || voiceChannel.type !== 'voice') return message.reply('I couldn\'t connect to your voice channel...');
+    const voice = message.member.voice;
+    if (!voice || voice.channel.type !== 'voice') return message.reply('I couldn\'t connect to your voice channel...');
     this.channel = message.channel;
-    return voiceChannel.join()
+    return voice.channel.join(connection => {
+      this.connection = connection;
+    })
   }
 
   // the difference between this function and nextSong
@@ -62,10 +66,10 @@ class Queue {
     // check if this is the first only song in queue and that we're in a vc
     // also check if we're playing already because if there is a song playing
     // if so just start the song
-    if (this.songs.length === 1 && this.playing === false && message.guild.voiceConnection) return this.nextSong(message);
+    if (this.songs.length === 1 && this.playing === false && this.connection) return this.nextSong(message);
     
     // if we are not in vc join it then play
-    if (!message.guild.voiceConnection) return this.join(message).then(() => this.nextSong(message));
+    if (!this.connection) return this.join(message).then(() => this.nextSong(message));
 
     // this will make sure the playing flag is set
     // it does it's own check so we just call it regardless tbh.
@@ -74,9 +78,9 @@ class Queue {
 
   endOfQueue() {
     this.channel.send('Queue is empty');
-    this.channel.guild.voiceConnection.disconnect();
+    if (this.connection) this.connection.disconnect();
+    this.connection = undefined;
     this.channel = undefined;
-    this.dispatcher = undefined;
     this.playing = false;
   }
 

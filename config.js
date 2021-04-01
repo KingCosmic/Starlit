@@ -7,8 +7,8 @@
  */
 
 module.exports = {
-  token: '',
-  owner: '',
-  prefix: '`',
-  youtubeapitoken: ''
+  token: process.env.TOKEN,
+  owner: '152186808732483584',
+  prefix: '!',
+  youtubeapitoken: process.env.YTTOKEN
 }

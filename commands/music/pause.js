@@ -17,6 +17,6 @@ module.exports = class MeowCommand extends Command {
     if (queue.playing === false) return message.reply('already paused');
 
     queue.pausePlaying();
-    message.channel.sendMessage('music paused');
+    message.channel.send('music paused');
   }
 }

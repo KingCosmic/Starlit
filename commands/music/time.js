@@ -17,6 +17,6 @@ module.exports = class MeowCommand extends Command {
   
     const { time } = queue.dispatcher;
 
-    message.channel.sendMessage(`time: ${Math.floor(time / 60000)}:${Math.floor((time % 60000) / 1000) < 10 ? '0' + Math.floor((time % 60000) / 1000) : Math.floor((time % 60000) / 1000)}`);
+    message.channel.send(`time: ${Math.floor(time / 60000)}:${Math.floor((time % 60000) / 1000) < 10 ? '0' + Math.floor((time % 60000) / 1000) : Math.floor((time % 60000) / 1000)}`);
   }
 }
