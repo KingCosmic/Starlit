@@ -12,6 +12,8 @@ module.exports = class AddCommand extends Command {
       group: 'twitch',
       memberName: 'add',
       description: 'adds a twitch account to recieve live events for.',
+      guildOnly: true,
+      userPermissions: ['MANAGE_CHANNELS'],
       args: [
         {
           key: 'username',
@@ -32,6 +34,7 @@ module.exports = class AddCommand extends Command {
     const user = await api.helix.users.getUserByName(username);
 
     // make a post request to get our new webhooks
+    try {
     const res = await axios({
       method: 'POST',
       url: 'https://api.twitch.tv/helix/eventsub/subscriptions',
@@ -49,10 +52,13 @@ module.exports = class AddCommand extends Command {
       },
       headers: {
         'Client-ID': process.env.TWITCH_CLIENT_ID,
-        'Authorization': `Bearer ${process.env.TWITCH_CLIENT_SECRET}`,
+        'Authorization': `Bearer ${process.env.TWITCH_AUTH_TOKEN}`,
         'Content-Type': 'application/json'
       }
     });
+    } catch(e) {
+      return console.log(e)
+    }
 
     await DB.LED.insertOne({
       channel_id: message.channel.id,
