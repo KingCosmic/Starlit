@@ -8,6 +8,7 @@
 
 module.exports = {
   token: process.env.TOKEN,
+  baseUrl: 'https://starlit.glitch.me',
   owner: '152186808732483584',
   prefix: '!',
   youtubeapitoken: process.env.YTTOKEN

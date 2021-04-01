@@ -38,7 +38,7 @@ const verifyTwitchSignature = (req, res, buf, encoding) => {
   }
 };
 
-module.exports = async () => {
+module.exports = async (client) => {
   const app = express();
 
   app.use(express.json({ verify: verifyTwitchSignature }));

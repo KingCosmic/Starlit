@@ -36,7 +36,7 @@ const init = async () => {
 
   client.on('error', console.error);
 
-  await setupExpress();
+  await setupExpress(client);
   client.login(config.token);
 }
 

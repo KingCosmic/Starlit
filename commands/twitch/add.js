@@ -3,6 +3,8 @@ const { Command } = require('discord.js-commando');
 const { api } = require('../../twitch');
 const DB = require('../../db');
 
+const config = require('../../config');
+
 const axios = require('axios');
 
 module.exports = class AddCommand extends Command {
@@ -23,11 +25,6 @@ module.exports = class AddCommand extends Command {
   }
 
   async run(message, { username }) {
-    // now how do I do this...
-    // I know we need to make a post request with the user id...
-    // how do we go about getting the user id..
-    // hmm
-
     // get our user we plan to get events for
     const user = await api.helix.users.getUserByName(username);
 
@@ -43,7 +40,7 @@ module.exports = class AddCommand extends Command {
         },
         "transport": {
           "method": "webhook",
-          "callback": "https://starlit.glitch.me/twitch/webhook",
+          "callback": `${config.baseUrl}/twitch/webhook`,
           "secret": process.env.TWITCH_SECRET
         }
       },
@@ -54,11 +51,13 @@ module.exports = class AddCommand extends Command {
       }
     });
 
+    // insert this data into the database
     await DB.LED.insertOne({
       channel_id: message.channel.id,
       user_id: user.id
     });
 
+    // give some user feedback
     message.say(`this channel will be notified once ${username} goes live.`);
   }
 }
