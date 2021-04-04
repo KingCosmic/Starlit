@@ -105,3 +105,6 @@ async function sendOnline(event) {
     `Online notification for ${event.broadcaster_user_name} sent.`
   );
 };
+
+
+export default router
