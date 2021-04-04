@@ -7,9 +7,14 @@
  */
 
 export default {
+  // token for logging in.
   token: process.env.TOKEN,
+  // base url for twitch webhooks
   baseUrl: 'https://starlit.glitch.me',
+  // owners
   owner: '152186808732483584',
+  // prefix
   prefix: '!',
+  // yt api token used for music.
   youtubeapitoken: process.env.YTTOKEN
 }

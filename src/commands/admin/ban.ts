@@ -12,6 +12,7 @@ class BanCommand extends Command {
       group: 'admin',
       memberName: 'ban',
       description: 'bans a user from the server',
+      userPermissions: ['BAN_MEMBERS']
     });
   }
 

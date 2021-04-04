@@ -1,11 +1,12 @@
 import { CommandoClient } from 'discord.js-commando'
+
 import callbacks from '../state/listeners'
 
 const groups = []
 
 // This method takes our client and
 // setups the events and listeners for our plugins.`
-module.exports = (client:CommandoClient) => {
+const setupListeners = (client:CommandoClient) => {
 
   // loop through our groups
   // a group can have multiple listeners
@@ -48,3 +49,5 @@ module.exports = (client:CommandoClient) => {
     }
   }
 };
+
+export default setupListeners

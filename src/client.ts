@@ -10,6 +10,7 @@ const setupClient = ():CommandoClient => {
   const client = new CommandoClient({
     commandPrefix: config.prefix,
     owner: config.owner,
+    invite: 'https://discord.gg/MKHXQfNGff'
   });
 
   // commando auto does commands but we have to manually setup our
@@ -37,6 +38,7 @@ const setupClient = ():CommandoClient => {
   // setup a error event
   client.on('error', console.error);
 
+  // return our client so we can use it later on.
   return client
 }
 
