@@ -13,10 +13,11 @@ class JoinCommand extends Command {
     });
   }
 
-  run(message:CommandoMessage):Promise<Message | Message[]> {
-    MusicState.join(message);
+  async run(message:CommandoMessage):Promise<Message | Message[]> {
+    const state = await MusicState.join(message);
 
-    return message.say('I joined your channel')
+    if (state !== undefined)
+      return message.say('I joined your channel')
   }
 }
 

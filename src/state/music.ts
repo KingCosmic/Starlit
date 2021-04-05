@@ -65,7 +65,7 @@ class MusicState {
     state.dispatcher = state.channel.guild.voice.connection.play(yt(song.url.trim(), { filter: 'audioonly' }));
     state.playing = true;
 
-    state.dispatcher.on('end', () => {
+    state.dispatcher.on('finish', () => {
       this.nextSong(guild_id);
     });
 
@@ -75,13 +75,12 @@ class MusicState {
     });
   }
 
-  // TODO:(Cosmic) create the state if there isn't one when we join.
   public async join(message:CommandoMessage) {
     // grab the current state for some checks
     let state = this.guilds.get(message.guild.id);
 
     // rn just return if we already have a state already
-    if (state !== null) return;
+    if (state !== undefined) return;
 
     /* joining a new voice chat */
 
@@ -91,7 +90,7 @@ class MusicState {
     // check if they're in a voice channel
     if (!voice || voice.channel.type !== 'voice') {
       message.reply('I couldn\'t connect to your voice channel...');
-      return null;
+      return undefined;
     }
 
     let connection = await voice.channel.join();
@@ -104,6 +103,8 @@ class MusicState {
       connection,
       channel: message.channel as TextChannel
     }
+
+    this.guilds.set(message.guild.id, state);
 
     return state
   }
@@ -119,16 +120,16 @@ class MusicState {
 
     // if state is null it means we couldnt connect to the vc or failed to make one
     // for another reason so just return.
-    if (state == null) return;
+    if (state === undefined) return;
 
     // add the song to our queue.
     state.queue.push(song);
 
     // if there's more then just the song we added let them know it was added to the queue
-    if (state.queue.length > 1) message.say(`Added **${song.title}** to the queue, requested by: **${song.requester}**`);
+    if (state.queue.length > 1 || state.currentSong) message.say(`Added **${song.title}** to the queue, requested by: **${song.requester}**`);
 
     // if this is the only song in the queue go ahead and state it.
-    if (state.queue.length === 1) return this.nextSong(message.guild.id);
+    if (state.queue.length === 1 && !state.currentSong) return this.nextSong(message.guild.id);
 
     // this will make sure the playing flag is set
     // it does it's own check so we just call it regardless tbh.
