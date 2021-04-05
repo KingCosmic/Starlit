@@ -40,7 +40,7 @@ class AddCommand extends Command {
 
       // grab the array of stream.online subs
       const streamNotifs = data.data.filter(d => d.type === 'stream.online');
-      // sub to this user 
+      // now grab the sub to this user 
       const sub = streamNotifs.find(d => d.condition.broadcaster_user_id === user.id);
 
       // we're subbed to this user already

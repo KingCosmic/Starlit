@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message } from 'discord.js'
 
-import queue from '../../state/queue'
+import MusicState from '../../state/music'
 
 class SkipCommand extends Command {
   constructor(client:CommandoClient) {
@@ -14,11 +14,16 @@ class SkipCommand extends Command {
   }
 
   run(message:CommandoMessage):Promise<Message | Message[]> {
-    const dispatcher = queue.dispatcher;
+    // check if we have a music state for this guild
+    if (!MusicState.hasGuild(message.guild.id)) return message.say('no music playing.');
 
-    if (dispatcher === undefined) return message.say('not playing any music');
+    // grab the state
+    const state = MusicState.guilds.get(message.guild.id);
 
-    dispatcher.end();
+    // end the current dispatcher so it goes to the next song
+    state.dispatcher.end();
+    
+    // user feedback
     return message.say('skipped')
   }
 }

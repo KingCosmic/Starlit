@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message } from 'discord.js'
 
-import queue from '../../state/queue'
+import MusicState from '../../state/music'
 
 class RepeatCommand extends Command {
   constructor(client:CommandoClient) {
@@ -14,9 +14,11 @@ class RepeatCommand extends Command {
   }
 
   run(message:CommandoMessage):Promise<Message | Message[]> {
-    queue.toggleRepeat();
+    if (!MusicState.hasGuild(message.guild.id)) return message.say('no music playing to repeat.');
 
-    return message.say(`repeat is ${(queue.repeat) ? 'on' : 'off'}`);
+    const repeat = MusicState.toggleRepeat(message.guild.id);
+
+    return message.say(`repeat is ${(repeat) ? 'on' : 'off'}`);
   }
 }
 

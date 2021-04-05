@@ -1,8 +1,13 @@
-import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message } from 'discord.js'
+
 import ytSearch from 'yt-search'
 
-import queue from '../../state/queue'
+import MusicState from '../../state/music'
+
+interface Args {
+  query:string
+}
 
 class PlayCommand extends Command {
   constructor(client:CommandoClient) {
@@ -11,28 +16,45 @@ class PlayCommand extends Command {
       group: 'music',
       memberName: 'play',
       description: 'queue\'s a song to play and starts playing if paused.',
+      args: [
+        {
+          key: 'query',
+          prompt: 'What query would you like to search?',
+          type: 'string',
+        }
+      ]
     });
   }
 
-  run(message:CommandoMessage):Promise<Message | Message[]> {
-    const searchcontent = message.content.slice(5);
-
-    if (searchcontent.length === 0) return message.say('specify a queury or link to play');
-
-    // the space in front of this IS REQUIRED
-    if (searchcontent.startsWith(' https://www.youtube.com')) {
-      return queue.play(message, {
-        title: searchcontent,
-        url: searchcontent
+  run(message:CommandoMessage, { query }:Args):Promise<Message | Message[]> {
+    // do we think the query is a youtube link?
+    if (query.startsWith('https://www.youtube.com')) {
+      MusicState.play(message, {
+        title: query,
+        url: query,
+        requester: message.author.username
       })
+
+      return 
     }
 
-    ytSearch(searchcontent, (err, results) => {
-      if (err) return console.log(err.toString());
+    // if we didnt get a youtube link start a query.
+    ytSearch(query, (err, results) => {
+      // if there is a error let our user know
+      if (err) {
+        console.log(err.toString());
+        return message.say(`An error occured ${err.toString()}`);
+      }
 
+      // loop through our results
       for (let v = 0; v < results.videos.length; v++) {
 
-        if (results.videos[v].url.startsWith('/')) return queue.play(message, results.videos[v]);
+        // find the first one that's usable (sorts through adds and what not.)
+        if (results.videos[v].url.startsWith('/')) return MusicState.play(message, {
+          title: results.videos[v].title,
+          url: results.videos[v].url,
+          requester: message.author.username
+        });
       }
     })
   }

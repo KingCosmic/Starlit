@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 
-import queue from '../../state/queue'
+import MusicState from '../../state/music'
 
 class JoinCommand extends Command {
   constructor(client:CommandoClient) {
@@ -14,7 +14,7 @@ class JoinCommand extends Command {
   }
 
   run(message:CommandoMessage):Promise<Message | Message[]> {
-    queue.join(message);
+    MusicState.join(message);
 
     return message.say('I joined your channel')
   }

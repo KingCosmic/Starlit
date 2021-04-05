@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message } from 'discord.js'
 
-import queue from '../../state/queue'
+import MusicState from '../../state/music'
 
 class TimeCommand extends Command {
   constructor(client:CommandoClient) {
@@ -14,11 +14,15 @@ class TimeCommand extends Command {
   }
 
   run(message:CommandoMessage):Promise<Message | Message[]> {
-    if (queue.dispatcher === undefined) return message.say('no music playing');
-  
-    const { time } = queue.dispatcher;
+    if (!MusicState.hasGuild(message.guild.id)) return message.say('no music playing');
 
-    return message.say(`time: ${Math.floor(time / 60000)}:${Math.floor((time % 60000) / 1000) < 10 ? '0' + Math.floor((time % 60000) / 1000) : Math.floor((time % 60000) / 1000)}`);
+    // grab the state
+    const state = MusicState.guilds.get(message.guild.id);
+  
+    // grab the stream time.
+    const { streamTime } = state.dispatcher;
+
+    return message.say(`time: ${Math.floor(streamTime / 60000)}:${Math.floor((streamTime % 60000) / 1000) < 10 ? '0' + Math.floor((streamTime % 60000) / 1000) : Math.floor((streamTime % 60000) / 1000)}`);
   }
 }
 

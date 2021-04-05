@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message } from 'discord.js'
 
-import queue from '../../state/queue'
+import MusicState from '../../state/music'
 
 class PauseCommand extends Command {
   constructor(client:CommandoClient) {
@@ -14,10 +14,19 @@ class PauseCommand extends Command {
   }
 
   run(message:CommandoMessage):Promise<Message | Message[]> {
-    if (queue.dispatcher === undefined) return message.say('no music playing');
-    if (queue.playing === false) return message.say('already paused');
+    // check if we have state for this server.
+    if (!MusicState.hasGuild(message.guild.id)) return message.say('No music playing to pause');
 
-    queue.pausePlaying();
+    // grab the state
+    let state = MusicState.guilds.get(message.guild.id);
+
+    // tell em it's already paused
+    if (state.playing === false) return message.say('already paused');
+
+    // pause the music
+    MusicState.pausePlaying(message.guild.id);
+
+    // let the user know it's paused
     return message.say('music paused');
   }
 }

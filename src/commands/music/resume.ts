@@ -1,7 +1,7 @@
-import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message } from 'discord.js'
 
-import queue from '../../state/queue'
+import MusicState from '../../state/music'
 
 class ResumeCommand extends Command {
   constructor(client:CommandoClient) {
@@ -14,10 +14,13 @@ class ResumeCommand extends Command {
   }
 
   run(message:CommandoMessage):Promise<Message | Message[]> {
-    if (queue.dispatcher === undefined) return message.say('no music playing');
-    if (queue.playing) return message.say('already playing');
+    // check if we have a state for this guild
+    if (!MusicState.hasGuild(message.guild.id)) return message.say('no music playing.');
 
-    queue.resumePlaying();
+    // resume the playing it does the checks itself
+    MusicState.resumePlaying(message.guild.id);
+
+    // user feedback
     message.say('music resumed');
   }
 }
