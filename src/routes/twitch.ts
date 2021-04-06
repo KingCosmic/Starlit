@@ -2,7 +2,7 @@ import express, { Router } from 'express'
 const router = Router();
 
 import { verifyTwitchSignature } from '../helpers'
-import { api } from '../twitch'
+import { api } from '../twitchapi'
 import DB from '../db'
 
 // grab our state so we can use our discord client

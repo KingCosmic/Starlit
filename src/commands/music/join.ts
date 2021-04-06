@@ -1,5 +1,5 @@
-import { Message } from 'discord.js';
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
+import { Message } from 'discord.js'
 
 import MusicState from '../../state/music'
 

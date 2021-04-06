@@ -16,22 +16,24 @@
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
     "@trycourier/courier": "^2.0.0",
+    "@types/tmi.js": "^1.7.1",
     "axios": "^0.21.1",
-    "discord.js": "^12.5.2",
+    "discord.js": "^12.5.3",
     "discord.js-commando": "^0.12.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "ffmpeg-static": "^4.3.0",
     "mongodb": "^3.6.5",
     "node-opus": "^0.3.3",
+    "random-id": "^1.0.4",
+    "tmi.js": "^1.7.5",
     "twitch": "^4.5.3",
     "twitch-auth": "^4.5.3",
     "twitch-eventsub": "^4.5.3",
     "typescript": "^4.2.3",
     "youtube-search": "^1.1.5",
     "yt-search": "^2.7.6",
-    "ytdl-core": "^4.4.5",
-    "random-id": "^1.0.4"
+    "ytdl-core": "^4.4.5"
   },
   "devDependencies": {
     "@types/express": "^4.17.11",

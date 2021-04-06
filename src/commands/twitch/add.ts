@@ -1,7 +1,7 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
 import { Message } from 'discord.js'
 
-import TwitchApi, { api } from '../../twitch'
+import TwitchApi, { api } from '../../twitchapi'
 import DB from '../../db'
 
 import config from '../../config'

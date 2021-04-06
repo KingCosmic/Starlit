@@ -2,7 +2,11 @@ import { CommandoClient } from 'discord.js-commando'
 
 import callbacks from '../state/listeners'
 
-const groups = []
+import twitchListeners from './twitchbot';
+
+const groups = [
+  twitchListeners
+]
 
 // This method takes our client and
 // setups the events and listeners for our plugins.`
@@ -35,6 +39,7 @@ const setupListeners = (client:CommandoClient) => {
         callbacks.set(listener.event, [listener.callback]);
 
         // this is our callback for the event
+        // @ts-ignore
         client.on(listener.event, (...args) => {
           // grab the callbacks for this event
           const cbs = callbacks.get(listener.event);
