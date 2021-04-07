@@ -1,19 +1,24 @@
-import { Message } from 'discord.js';
-import { CommandoClient } from 'discord.js-commando';
+import { CommandoClient } from 'discord.js-commando'
+import { Message } from 'discord.js'
+
 import tmi from 'tmi.js'
 
+// array of discord channels we are syncing
 const channels = ['828772759509008386']
 
+// twitch channel to it's respective discord channel
 const channelToDiscord = {
   '#dragonic03': '828772759509008386',
   '#kingcosmicdev': ''
 }
 
+// discord channel to it's respective twitch channel
 const discordToChannel = {
   '828772759509008386': '#dragonic03',
   '': '#kingcosmicdev'
 }
 
+// setup our client
 const client = new tmi.Client({
 	options: {
     clientId: process.env.TWITCH_CLIENT_ID
@@ -23,6 +28,7 @@ const client = new tmi.Client({
 		username: process.env.TWITCH_USERNAME,
 		password: process.env.TWITCH_PASSWORD
 	},
+  // channels to listen for events from.
 	channels: [ 'dragonic03', 'kingcosmicdev' ]
 });
 
@@ -49,7 +55,7 @@ const events = [
   {
     event: 'message',
     callback: async (discordclient:CommandoClient, message:Message) => {
-      if (!channels.includes(message.channel.id) && message.author.bot) return;
+      if (!channels.includes(message.channel.id) || message.author.bot) return;
 
       client.say(discordToChannel[message.channel.id], `${message.author.username}: ${message.content}`);
     }
