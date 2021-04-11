@@ -1,7 +1,7 @@
 import express, { Router } from 'express'
 const router = Router();
 
-import { verifyTwitchSignature } from '../helpers'
+import { verifyTwitchSignature } from '../helpers/twitch'
 import { api } from '../twitchapi'
 import DB from '../db'
 

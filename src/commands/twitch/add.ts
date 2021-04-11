@@ -34,8 +34,6 @@ class AddCommand extends Command {
     try {
       const { data } = await TwitchApi.getSubscriptions();
 
-      console.log(data)
-
       if (data.total_cost === data.max_total_cost) return message.say('cannot listen for more status changes.');
 
       // grab the array of stream.online subs

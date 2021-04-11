@@ -22,8 +22,9 @@ const setupClient = ():CommandoClient => {
   .registerDefaultTypes()
   .registerGroups([
     ['admin', 'admin commands to make life easier'],
-    ['twitch', 'commands to setup channels for live messages'],
-    ['music', 'music commands for the friends']
+    ['code', 'commands for programmers'],
+    ['music', 'music commands for the friends'],
+    ['twitch', 'commands to setup channels for live messages']
   ])
   .registerDefaultGroups()
   .registerDefaultCommands()
