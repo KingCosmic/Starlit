@@ -7,13 +7,16 @@ import CodeState, { RanRes } from '../state/code'
 import config from '../config'
 
 export function parseCodeblock(message:CommandoMessage) {
+  // does our message have a code block?
   if (message.content.match(/```/g).length != 2) {
     message.say('Invalid command format (missing codeblock?)');
     return
   }
 
+  // [!run, js, ```js, etc..., etc..]
+  const [cmd, language, ...codearr] = message.content.split(' ');
 
-  let regex = new RegExp(`${config.prefix}(?:edit_last_)?run(?: +(\\S*)\\s*|\\s*)(?:\\n((?:[^\\n\\r\\f\\v]*\\n)*?)\\s*|\\s*)\`\`\`(?:(\\S+)\n\\s*|\\s*)([\\s\\S]*)\`\`\`(?:\\n?((?:[^\\n\\r\\f\\v]\\n?)+)+|)`)
+  const code = codearr.join(' ');
 
   const match = message.content.match(regex);
 
