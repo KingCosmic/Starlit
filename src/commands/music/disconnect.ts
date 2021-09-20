@@ -1,34 +1,25 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
-import { Message } from 'discord.js'
+import { CommandInteraction } from 'discord.js'
 
-// grab our state
-import MusicState from '../../state/music'
+import State from '../../State'
 
-class DisconnectCommand extends Command {
-  constructor(client:CommandoClient) {
-    super(client, {
-      name: 'disconnect',
-      aliases: ['leave'],
-      group: 'music',
-      memberName: 'disconnect',
-      description: 'makes the bot leave the vc.',
-    });
-  }
+import { BaseCommand } from '../../types'
 
-  run(message:CommandoMessage):Promise<Message | Message[]> {
-    // if we have no music state and a voice connection to the server
-    // maybe the bot reset while it was connected and state was reset
-    if (!MusicState.hasGuild(message.guild.id) && message.guild.voice.connection) {
-      // just disconnect and call it a day
-      message.guild.voice.connection.disconnect();
-    }
+class Command extends BaseCommand {
+  name = 'disconnect'
+  description = 'force the bot to leave a vc.'
 
-    // force end of queue
-    MusicState.endOfQueue(message.guild.id, true);
+  async execute(msg:CommandInteraction, args:any) {
+    // grab our subscription
+    let sub = State.subscriptions.get(msg.guildId || '')
 
-    // give some user feedback
-    return message.say('I disconnected')
+    // if we have no subscription just let em know.
+    if (!sub) return await msg.reply('Not playing in this server!')
+
+    sub.voiceConnection.destroy()
+    State.subscriptions.delete(msg.guildId || '')
+
+    await msg.reply({ content: 'Left channel!', ephemeral: true })
   }
 }
 
-export default DisconnectCommand
+export default new Command()

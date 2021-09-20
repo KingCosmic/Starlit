@@ -1,63 +1,84 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
-import { Message } from 'discord.js'
+import { entersState, joinVoiceChannel, VoiceConnectionStatus } from '@discordjs/voice'
+import { CommandInteraction, GuildMember } from 'discord.js'
 
-import ytSearch from 'yt-search'
+import { MusicSubscription } from '../../subscription'
 
-import MusicState from '../../state/music'
+import State from '../../State'
 
-interface Args {
-  query:string
-}
+import { BaseCommand } from '../../types'
+import { Track } from '../../track'
+import { SlashCommandSubcommandBuilder } from '@discordjs/builders'
 
-class PlayCommand extends Command {
-  constructor(client:CommandoClient) {
-    super(client, {
-      name: 'play',
-      group: 'music',
-      memberName: 'play',
-      description: 'queue\'s a song to play and starts playing if paused.',
-      args: [
-        {
-          key: 'query',
-          prompt: 'What query would you like to search?',
-          type: 'string',
-        }
-      ]
-    });
-  }
+class Command extends BaseCommand {
+  name = 'play'
+  description = 'play music in the vc'
 
-  run(message:CommandoMessage, { query }:Args):Promise<Message | Message[]> {
-    // do we think the query is a youtube link?
-    if (query.startsWith('https://www.youtube.com')) {
-      MusicState.play(message, {
-        title: query,
-        url: query,
-        requester: message.author.username
-      })
+  async execute(msg:CommandInteraction, args:any) {
+    await msg.deferReply()
 
-      return 
+    let sub = State.subscriptions.get(msg.guildId || '')
+
+    // Extract the video URL from the command
+		const url = msg.options.get('song')!.value! as string;
+
+    // If a connection to the guild doesn't already exist and the user is in a voice channel, join that channel
+		// and create a subscription.
+    if (!sub && (msg.member instanceof GuildMember && msg.member.voice.channel)) {
+      const channel = msg.member.voice.channel
+
+      sub = new MusicSubscription(
+        joinVoiceChannel({
+          channelId: channel.id,
+          guildId: channel.guild.id,
+          adapterCreator: channel.guild.voiceAdapterCreator
+        })
+      )
+
+      sub.voiceConnection.on('error', console.warn)
+      State.subscriptions.set(msg.guildId || '', sub)
     }
 
-    // if we didnt get a youtube link start a query.
-    ytSearch(query, (err, results) => {
-      // if there is a error let our user know
-      if (err) {
-        console.log(err.toString());
-        return message.say(`An error occured ${err.toString()}`);
-      }
+    // If there is no subscription, tell the user they need to join a channel.
+		if (!sub) {
+			return await msg.followUp('Join a voice channel and then try that again!')
+		}
 
-      // loop through our results
-      for (let v = 0; v < results.videos.length; v++) {
+		// Make sure the connection is ready before processing the user's request
+		try {
+			await entersState(sub.voiceConnection, VoiceConnectionStatus.Ready, 20e3)
+		} catch (error) {
+			console.warn(error)
+			return await msg.followUp('Failed to join voice channel within 20 seconds, please try again later!')
+		}
 
-        // find the first one that's usable (sorts through adds and what not.)
-        if (results.videos[v].url.startsWith('/')) return MusicState.play(message, {
-          title: results.videos[v].title,
-          url: results.videos[v].url,
-          requester: message.author.username
-        });
-      }
-    })
+    // if we made it here we canm play music
+    try {
+			// Attempt to create a Track from the user's video URL
+			const track = await Track.from(url, {
+				onStart() {
+					msg.followUp({ content: 'Now playing!', ephemeral: true }).catch(console.warn)
+				},
+				onFinish() {
+					msg.followUp({ content: 'Now finished!', ephemeral: true }).catch(console.warn)
+				},
+				onError(error) {
+					console.warn(error)
+					msg.followUp({ content: `Error: ${error.message}`, ephemeral: true }).catch(console.warn)
+				}
+			})
+
+			// Enqueue the track and reply a success message to the user
+			sub.enqueue(track)
+			await msg.followUp(`Enqueued **${track.title}**`)
+		} catch (error) {
+			console.warn(error)
+			await msg.reply('Failed to play track, please try again later!')
+		}
+  }
+
+  setInfo(builder:SlashCommandSubcommandBuilder) {
+    return builder.setName(this.name).setDescription(this.description).addStringOption(option => option.setName('song').setDescription('The URL of the song to play').setRequired(true))
   }
 }
 
-export default PlayCommand
+export default new Command()

@@ -1,28 +1,47 @@
-require('dotenv').config()
+import { readdirSync } from 'fs'
+import { SlashCommandBuilder } from '@discordjs/builders'
 
-import setupExpress from './express'
-import setupClient from './client'
-import State from './state/app'
-import DB from './db'
+import setupCommands from './setupCommands'
+import setupBot from './bot'
 
-import config from './config'
+import BotState from './State'
+import { BaseCommand } from './types'
+import Collection from '@discordjs/collection'
 
-const init = async () => {
+// grab all file names from commands directory that are ts files.
+const commandFolders = readdirSync('./src/commands', { withFileTypes: true }).filter(file => file.isDirectory()).map(dirent => dirent.name)
 
-  // connect to our database
-  await DB.connect()
-  console.log('connected to database')
+// setup an array for our command info.
+const commandInfo = []
 
-  const client = setupClient()
+for (let f = 0; f < commandFolders.length; f++) {
+  const folderName = commandFolders[f]
 
-  // update our internal state.
-  State.client = client;
+  const commandFiles = readdirSync(`./src/commands/${folderName}`).filter(file => file.endsWith('.ts'))
 
-  // create an express server.
-  await setupExpress();
+  BotState.commands.set(folderName, new Collection())
 
-  // login our client.
-  client.login(config.token);
+  // TODO: get command info based on folder directory.
+  const CommandBuilder = new SlashCommandBuilder().setName(folderName).setDescription(`commands for ${folderName}`)
+
+  // loop through each filename we recieved.
+  for (const file of commandFiles) {
+    // grab the command code.
+    const { default:command }: { default:BaseCommand } = require(`./commands/${folderName}/${file}`)
+
+    // add the command to our bot state
+    BotState.commands.get(folderName)?.set(command.name, command)
+
+    // build our command info
+    CommandBuilder.addSubcommand(command.setInfo.bind(command))
+  }
+
+  // add the command info to our list.
+  commandInfo.push(CommandBuilder)
 }
 
-init();
+// setup our slash commands
+setupCommands(commandInfo)
+
+// start the bot.
+setupBot()

@@ -1,31 +1,28 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
-import { Message } from 'discord.js'
+import { CommandInteraction } from 'discord.js'
 
-import MusicState from '../../state/music'
+import State from '../../State'
 
-class SkipCommand extends Command {
-  constructor(client:CommandoClient) {
-    super(client, {
-      name: 'skip',
-      group: 'music',
-      memberName: 'skip',
-      description: 'skips the current song',
-    });
-  }
+import { BaseCommand } from '../../types'
 
-  run(message:CommandoMessage):Promise<Message | Message[]> {
-    // check if we have a music state for this guild
-    if (!MusicState.hasGuild(message.guild.id)) return message.say('no music playing.');
+class Command extends BaseCommand {
+  name = 'skip'
+  description = 'skip the current song.'
 
-    // grab the state
-    const state = MusicState.guilds.get(message.guild.id);
+  async execute(msg:CommandInteraction, args:any) {
+    // grab our subscription
+    let sub = State.subscriptions.get(msg.guildId || '')
 
-    // end the current dispatcher so it goes to the next song
-    state.dispatcher.end();
-    
-    // user feedback
-    return message.say('skipped')
+    // if we have no subscription just let em know.
+    if (!sub) return await msg.reply('Not playing in this server!')
+
+    // Calling .stop() on an AudioPlayer causes it to transition into the Idle state. Because of a state transition
+    // listener defined in music/subscription.ts, transitions into the Idle state mean the next track from the queue
+    // will be loaded and played.
+    sub.audioPlayer.stop()
+
+    // reply to the user
+    await msg.reply('Skipped song!')
   }
 }
 
-export default SkipCommand
+export default new Command()

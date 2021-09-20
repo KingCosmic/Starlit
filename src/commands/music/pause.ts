@@ -1,34 +1,26 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando'
-import { Message } from 'discord.js'
+import { CommandInteraction } from 'discord.js'
 
-import MusicState from '../../state/music'
+import State from '../../State'
 
-class PauseCommand extends Command {
-  constructor(client:CommandoClient) {
-    super(client, {
-      name: 'pause',
-      group: 'music',
-      memberName: 'pause',
-      description: 'pauses the current queue.',
-    });
-  }
+import { BaseCommand } from '../../types'
 
-  run(message:CommandoMessage):Promise<Message | Message[]> {
-    // check if we have state for this server.
-    if (!MusicState.hasGuild(message.guild.id)) return message.say('No music playing to pause');
+class Command extends BaseCommand {
+  name = 'pause'
+  description = 'pause the playback of music'
 
-    // grab the state
-    let state = MusicState.guilds.get(message.guild.id);
+  async execute(msg:CommandInteraction, args:any) {
+    // grab our subscription
+    let sub = State.subscriptions.get(msg.guildId || '')
 
-    // tell em it's already paused
-    if (state.playing === false) return message.say('already paused');
+    // if we have no subscription just let em know.
+    if (!sub) return await msg.reply('Not playing in this server!')
 
-    // pause the music
-    MusicState.pausePlaying(message.guild.id);
+    // pause our audio player.
+    sub.audioPlayer.pause()
 
-    // let the user know it's paused
-    return message.say('music paused');
+    // let em know we paused
+		await msg.reply({ content: `Paused!`, ephemeral: true })
   }
 }
 
-export default PauseCommand
+export default new Command()
